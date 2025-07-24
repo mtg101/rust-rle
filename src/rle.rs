@@ -53,7 +53,19 @@ mod tests {
     #[test]
         // more than 255 in a row, so for $FE 500 times expect back $FE, 255 / $FE, 245
         fn does_large_rle() {
-            assert_eq!(true, false);                        
+            let mut raw: Vec<u8> = Vec::new();
+            raw.push(1);
+
+            for _number in 1..500 {
+                raw.push(2);
+            }
+
+            raw.push(1);
+
+            let rle_good: Vec<(u8, u8)> = vec![(1, 1), (2, 255), (2, 245), (1, 1)];
+            let rle_test: Vec<(u8, u8)> = rle(raw);
+
+            assert_eq!(rle_good, rle_test);
         }
 
 }
