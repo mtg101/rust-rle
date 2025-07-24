@@ -1,3 +1,9 @@
+mod rle;
+
+
 fn main() {
-    println!("Hello, world!");
+    println!("RLE for SpeccyTrain");
+    let v: Vec<u8> = vec![1, 2, 3];
+    rle::rle(v);
 }
+
