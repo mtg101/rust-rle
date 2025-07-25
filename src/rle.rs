@@ -1,3 +1,5 @@
+use std::fs;
+
 
 // takes vector of bytes
 // returns vector of tuples: byte, num_times
@@ -35,14 +37,25 @@ pub fn rle_print_bitmap_raw(bitmap: Vec<u8>) {
     }
 }
 
-
 pub fn rle_print_rle_z80(rle_bytes:  Vec<(u8, u8)>) {
     for tup_bytes in rle_bytes {
         println!("\tdefb\t\t{},\t{}", tup_bytes.0, tup_bytes.1)
     }
 }
 
+pub fn rle_write_file_rle_z80(rle_bytes:  Vec<(u8, u8)>) {
+    let mut z80: String = String::new();
 
+    for tup_bytes in rle_bytes {
+        z80.push_str(format!("\tdefb\t\t{},\t{}\n", tup_bytes.0, tup_bytes.1).as_str());
+    }
+
+    fs::write("rle.z80", z80);
+}
+
+
+
+//            format!("\tdefb\t\t{},\t{}", tup_bytes.0, tup_bytes.1)
 
 // tests in same file... also odd
 
@@ -107,6 +120,11 @@ mod tests {
             rle_print_rle_z80(rle_good);
         }
 
+    #[test]
+        fn test_rle_write_file_rle_z80() {
+            let rle_good: Vec<(u8, u8)> = vec![(1, 1), (2, 2), (3, 3), (4, 2), (3,1), (2, 1), (1, 1)];
+            rle_write_file_rle_z80(rle_good);
+        }
 
 
 }
