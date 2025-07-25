@@ -57,11 +57,9 @@ pub fn rle_write_file_rle_z80(file_name: &str, rle_bytes:  Vec<(u8, u8)>) {
 
 
 
-//            format!("\tdefb\t\t{},\t{}", tup_bytes.0, tup_bytes.1)
-
 // tests in same file... also odd
 
-#[cfg(test)]              // commented out so 'build' builds the tests too
+#[cfg(test)]              
 mod tests {
     use super::*;         
 
