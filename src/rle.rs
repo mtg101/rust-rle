@@ -43,14 +43,16 @@ pub fn rle_print_rle_z80(rle_bytes:  Vec<(u8, u8)>) {
     }
 }
 
-pub fn rle_write_file_rle_z80(rle_bytes:  Vec<(u8, u8)>) {
+pub fn rle_write_file_rle_z80(file_name: &str, rle_bytes:  Vec<(u8, u8)>) {
     let mut z80: String = String::new();
 
     for tup_bytes in rle_bytes {
         z80.push_str(format!("\tdefb\t\t{},\t{}\n", tup_bytes.0, tup_bytes.1).as_str());
     }
 
-    fs::write("rle.z80", z80);
+    fs::write(file_name, z80).ok();         // yeah that .ok() to avoid Result warning... dodgy
+                                                           // should at least learn to accept Result
+                                                           // and panic on Err 
 }
 
 
@@ -123,7 +125,7 @@ mod tests {
     #[test]
         fn test_rle_write_file_rle_z80() {
             let rle_good: Vec<(u8, u8)> = vec![(1, 1), (2, 2), (3, 3), (4, 2), (3,1), (2, 1), (1, 1)];
-            rle_write_file_rle_z80(rle_good);
+            rle_write_file_rle_z80("rle.z80", rle_good);
         }
 
 

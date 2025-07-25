@@ -8,6 +8,6 @@ fn main() {
     println!("");
     let rle_ver: Vec<(u8, u8)> = rle::rle(bitmap);
     rle::rle_print_rle_z80(rle_ver.clone());
-    rle::rle_write_file_rle_z80(rle_ver);
+    rle::rle_write_file_rle_z80("rle.z80", rle_ver);
 }
 
