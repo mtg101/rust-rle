@@ -4,7 +4,7 @@ So I need a way to turn a bitmap version into an RLE version.
 
 Obviously there are lots of tools out there I could use and with some fiddling make my life easier. 
 
-Or I could write a little tool to do exxactly what I need: char/udg/attr lists into assembler blocks of code.
+Or I could write a little tool to do exactly what I need: char/udg/attr lists into assembler blocks of code.
 But that would be kinda boring coding...
 
 Unless... Unless I took this as an opportunity to learn something else new.
