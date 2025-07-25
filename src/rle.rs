@@ -30,19 +30,16 @@ pub fn rle(bitmap: Vec<u8>) -> Vec<(u8, u8)> {
 }
 
 pub fn rle_print_bitmap_raw(bitmap: Vec<u8>) {
-
+    for byte in bitmap {
+        print!("{} ", byte)
+    }
 }
 
-pub fn rle_print_bitmap_z80(bitmap: Vec<u8>) {
-
-}
-
-pub fn rle_print_rle_raw(rle_bytes:  Vec<(u8, u8)>) {
-
-}
 
 pub fn rle_print_rle_z80(rle_bytes:  Vec<(u8, u8)>) {
-
+    for tup_bytes in rle_bytes {
+        println!("\tdefb\t\t{},\t{}", tup_bytes.0, tup_bytes.1)
+    }
 }
 
 
@@ -97,6 +94,20 @@ mod tests {
 
             assert_eq!(rle_good, rle_test);
         }
+
+    #[test]
+        fn test_rle_print_bitmap_raw() {
+            let bitmap: Vec<u8> = vec![1, 2, 2, 3, 3, 3, 4, 4, 3, 2, 1];
+            rle_print_bitmap_raw(bitmap);
+        }
+
+    #[test]
+        fn test_rle_print_rle_z80() {
+            let rle_good: Vec<(u8, u8)> = vec![(1, 1), (2, 2), (3, 3), (4, 2), (3,1), (2, 1), (1, 1)];
+            rle_print_rle_z80(rle_good);
+        }
+
+
 
 }
 
