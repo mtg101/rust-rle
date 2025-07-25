@@ -4,17 +4,29 @@
 // becasue z80 register is 8bit, num_times is 8bit, so $FE 500 in a row is $FE, 255 / $FE, 245 
 pub fn rle(raw: Vec<u8>) -> Vec<(u8, u8)> {
     println!("Raw input bytes: {}", raw.len());     // len rather than length - already better than Java! :)
-    let v: Vec<(u8, u8)> = Vec::new();
+    let mut rle_vec: Vec<(u8, u8)> = Vec::new();
 
+    let mut index = 0;
 
-    // get a number
-    // how many are of them?
-    // write tuple to vec
-    // next number
+    while index < raw.len() {
+        let next_byte: u8 = raw[index];
+        let mut count = 1;
 
+        index += 1;
 
-    println!("RLE bytes: {}", v.len());     // len rather than length - already better than Java! :)
-    v   // don't have to say 'return' for final expression being the return value
+        while index < raw.len() && next_byte == raw[index] {
+            count += 1;
+            index += 1;
+            if count == 255 {
+                break;
+            }
+        }
+
+        rle_vec.push((next_byte, count));        
+    }
+
+    println!("RLE bytes: {}", rle_vec.len() * 2);     // len rather than length - already better than Java! :)
+    rle_vec       // yeah this is gonna feel weird for a while...
 }
 
 
@@ -56,10 +68,9 @@ mod tests {
             let mut raw: Vec<u8> = Vec::new();
             raw.push(1);
 
-            for _number in 1..500 {
+            for _number in 0..500 {
                 raw.push(2);
             }
-
             raw.push(1);
 
             let rle_good: Vec<(u8, u8)> = vec![(1, 1), (2, 255), (2, 245), (1, 1)];
