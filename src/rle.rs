@@ -1,5 +1,5 @@
 use std::fs;
-
+use std::io;
 
 // takes vector of bytes
 // returns vector of tuples: byte, num_times
@@ -53,6 +53,40 @@ pub fn rle_write_file_rle_z80(file_name: &str, rle_bytes:  Vec<(u8, u8)>) {
     fs::write(file_name, z80).ok();         // yeah that .ok() to avoid Result warning... dodgy
                                                            // should at least learn to accept Result
                                                            // and panic on Err 
+}
+
+
+// handles the format downloaded by https://zx.remysharp.com/sprites/#tiles
+// that's some zxnext format... 
+// but if you skip to the $ sign (0x24) then the rest is list of tileIds
+pub fn read_remy_write_file_rle_z80(file_name: &str) -> io::Result<()> {
+    // make out filename (just add .z80)
+    let z80_file_name = file_name.to_owned() + ".z80";
+
+    // read file
+    let data: Vec<u8> = fs::read(file_name)?;
+
+    // skip headers and stuff
+    let mut index: usize = 0;
+    while index < data.len() {
+        if data[index] == 0x24 {
+            index += 1;         // could go out of bounds if it's the last value in the file..
+            break;
+        }        
+
+        index += 1;
+    }
+
+    // get the btimap part
+    let bitmap_data = &data[index..data.len()];
+
+    // rle vals
+    let rle_data: Vec<(u8, u8)> = rle(bitmap_data.to_vec());
+
+    // write
+    rle_write_file_rle_z80(z80_file_name.as_str(), rle_data);
+
+    Ok(())
 }
 
 
@@ -126,6 +160,10 @@ mod tests {
             rle_write_file_rle_z80("rle.z80", rle_good);
         }
 
+    #[test]
+        fn test_read_remy_write_file_rle_z80() {
+            assert!(!read_remy_write_file_rle_z80("test_remy.map").is_err());
+        }
 
 }
 

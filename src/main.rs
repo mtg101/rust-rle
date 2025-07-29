@@ -9,5 +9,6 @@ fn main() {
     let rle_ver: Vec<(u8, u8)> = rle::rle(bitmap);
     rle::rle_print_rle_z80(rle_ver.clone());
     rle::rle_write_file_rle_z80("rle.z80", rle_ver);
+    rle::read_remy_write_file_rle_z80("test_remy.map").unwrap();
 }
 
