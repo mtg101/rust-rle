@@ -1,4 +1,5 @@
 mod rle;
+use std::collections::HashMap;
 
 
 fn main() {
@@ -10,6 +11,8 @@ fn main() {
     rle::rle_print_rle_z80(rle_ver.clone());
     rle::rle_write_file_rle_z80("rle.z80", "SOME_LABEL", rle_ver);
     rle::read_remy_write_file_rle_z80("test_remy.map", "REMY_BITMAP_RLE").unwrap();
-    rle::remap_z80_defb_file("test_remy.map.z80").unwrap();
+
+    let mt_map = HashMap::new();
+    rle::remap_z80_defb_file("test_remy.map.z80", "REMY_BITMAP_RLE", mt_map).unwrap();
 }
 

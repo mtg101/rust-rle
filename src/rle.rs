@@ -1,5 +1,7 @@
 use std::fs;
 use std::io;
+use std::collections::HashMap;
+
 
 // takes vector of bytes
 // returns vector of tuples: byte, num_times
@@ -97,19 +99,23 @@ pub fn read_remy_write_file_rle_z80(file_name: &str, label_name: &str) -> io::Re
 // adds .z80 to filename... so yeah ..z80.z80 but meh
 // format: \tdefb\tn,\tm
 // n gets replaced byt str, so can be %01010011 for attrs
-pub fn remap_z80_defb_file(file_name: &str) -> io::Result<()> {
-    // read file
+pub fn remap_z80_defb_file(file_name: &str, label_name: &str, remap_values: HashMap<&str, &str>)-> io::Result<()> {
+    // read fi
+    let data: Vec<u8> = fs::read(file_name)?;
 
     // find the label
     // passed in plus :
+    // must be a better way than manually trawling the u8s...
 
     // format \tdefb\tn,\tm
     // we replace n with chars (eg attrs %01010110)
+    // look up n in hashmap for what (if anything) to replace it with
 
     // and panics (new thing to learn...)
     // check \tdefb\\t - if not panic
     // read num, panic if not, etc etc
 
+    // stop when get to blank line / end of data
 
     // and hey - return error if format is bad
     // and have a panic test for it...
@@ -119,7 +125,10 @@ pub fn remap_z80_defb_file(file_name: &str) -> io::Result<()> {
 }
 
 
+
+////////////////////////////////////////
 // tests in same file... also odd
+////////////////////////////////////////
 
 #[cfg(test)]              
 mod tests {
@@ -191,6 +200,17 @@ mod tests {
     #[test]
         fn test_read_remy_write_file_rle_z80() {
             assert!(!read_remy_write_file_rle_z80("test_remy.map", "TEST_REMY_LABEL").is_err());
+        }
+
+    #[test]
+        fn test_remap_z80_defb_file() {
+            let mut attr_map = HashMap::new();
+            attr_map.insert("0", "%00000000");
+            attr_map.insert("1", "%00010000");
+            attr_map.insert("2", "%00100000");
+            attr_map.insert("3", "%00001000");
+
+            assert!(!remap_z80_defb_file("test_remy.map", "TEST_REMY_LABEL", attr_map).is_err());
         }
 
 }
