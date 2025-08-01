@@ -43,8 +43,10 @@ pub fn rle_print_rle_z80(rle_bytes:  Vec<(u8, u8)>) {
     }
 }
 
-pub fn rle_write_file_rle_z80(file_name: &str, rle_bytes:  Vec<(u8, u8)>) {
+pub fn rle_write_file_rle_z80(file_name: &str, label_name: &str, rle_bytes:  Vec<(u8, u8)>) {
     let mut z80: String = String::new();
+
+    z80.push_str(format!("{label_name}:\n").as_str());
 
     for tup_bytes in rle_bytes {
         z80.push_str(format!("\tdefb\t\t{},\t{}\n", tup_bytes.0, tup_bytes.1).as_str());
@@ -59,7 +61,7 @@ pub fn rle_write_file_rle_z80(file_name: &str, rle_bytes:  Vec<(u8, u8)>) {
 // handles the format downloaded by https://zx.remysharp.com/sprites/#tiles
 // that's some zxnext format... 
 // but if you skip to the $ sign (0x24) then the rest is list of tileIds
-pub fn read_remy_write_file_rle_z80(file_name: &str) -> io::Result<()> {
+pub fn read_remy_write_file_rle_z80(file_name: &str, label_name: &str) -> io::Result<()> {
     // make out filename (just add .z80)
     let z80_file_name = file_name.to_owned() + ".z80";
 
@@ -83,12 +85,38 @@ pub fn read_remy_write_file_rle_z80(file_name: &str) -> io::Result<()> {
     // rle vals
     let rle_data: Vec<(u8, u8)> = rle(bitmap_data.to_vec());
 
+    // write label is passed in
+    // passed in plus :    
+
     // write
-    rle_write_file_rle_z80(z80_file_name.as_str(), rle_data);
+    rle_write_file_rle_z80(z80_file_name.as_str(), label_name, rle_data);
 
     Ok(())
 }
 
+// adds .z80 to filename... so yeah ..z80.z80 but meh
+// format: \tdefb\tn,\tm
+// n gets replaced byt str, so can be %01010011 for attrs
+pub fn remap_z80_defb_file(file_name: &str) -> io::Result<()> {
+    // read file
+
+    // find the label
+    // passed in plus :
+
+    // format \tdefb\tn,\tm
+    // we replace n with chars (eg attrs %01010110)
+
+    // and panics (new thing to learn...)
+    // check \tdefb\\t - if not panic
+    // read num, panic if not, etc etc
+
+
+    // and hey - return error if format is bad
+    // and have a panic test for it...
+
+
+    Ok(())
+}
 
 
 // tests in same file... also odd
@@ -157,12 +185,12 @@ mod tests {
     #[test]
         fn test_rle_write_file_rle_z80() {
             let rle_good: Vec<(u8, u8)> = vec![(1, 1), (2, 2), (3, 3), (4, 2), (3,1), (2, 1), (1, 1)];
-            rle_write_file_rle_z80("rle.z80", rle_good);
+            rle_write_file_rle_z80("rle.z80", "TEST_LABEL", rle_good);
         }
 
     #[test]
         fn test_read_remy_write_file_rle_z80() {
-            assert!(!read_remy_write_file_rle_z80("test_remy.map").is_err());
+            assert!(!read_remy_write_file_rle_z80("test_remy.map", "TEST_REMY_LABEL").is_err());
         }
 
 }

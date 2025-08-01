@@ -1,3 +1,4 @@
+TEST_REMY_LABEL:
 	defb		0,	32
 	defb		1,	32
 	defb		0,	32
